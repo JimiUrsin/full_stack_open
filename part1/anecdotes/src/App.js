@@ -24,6 +24,13 @@ const VoteButton = ({selected, points, setPoints}) => {
   )
 }
 
+const Anecdote = ({selected, points, anecdotes}) => (
+  <>
+    <p>{anecdotes[selected]}</p>
+    <p>has {points[selected]} votes</p>
+  </>
+)
+
 const App = () => {
   const anecdotes = [
     'If it hurts, do it more often.',
@@ -34,17 +41,28 @@ const App = () => {
     'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.',
     'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients.'
   ]
+
+  const mostVotesIndex = () => {
+    const max = Math.max(...points)
+    return points.indexOf(max)
+  }
    
   const [selected, setSelected] = useState(0)
   const [points, setPoints] = useState(new Uint16Array(anecdotes.length))
 
   return (
-    <div>
-      <p>{anecdotes[selected]}</p>
-      <p>has {points[selected]} votes</p>
-      <NextButton setSelected={setSelected} max={anecdotes.length}/>
-      <VoteButton selected={selected} points={points} setPoints={setPoints}/>
-    </div>
+    <>
+      <div>
+        <h1>Anecdote of the day</h1>
+        <Anecdote selected={selected} points={points} anecdotes={anecdotes}/>
+        <VoteButton selected={selected} points={points} setPoints={setPoints}/>
+        <NextButton setSelected={setSelected} max={anecdotes.length}/>    
+      </div>
+      <div>
+        <h1>Anecdote with most votes</h1>
+        <Anecdote selected={mostVotesIndex()} points={points} anecdotes={anecdotes} />
+      </div>
+    </>
   )
 }
 
