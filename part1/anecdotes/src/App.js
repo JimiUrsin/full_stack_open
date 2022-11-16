@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-const Button = ({setSelected, max}) => {
+const NextButton = ({setSelected, max}) => {
   const set = () => {
     const num = Math.floor((Math.random() * max))
     setSelected(num)
@@ -9,6 +9,17 @@ const Button = ({setSelected, max}) => {
   return (
     <button onClick={set}>
       next anecdote
+    </button>
+  )
+}
+
+const VoteButton = ({selected, points, setPoints}) => {
+  const copy = [...points]
+  copy[selected] += 1
+
+  return (
+    <button onClick={() => setPoints(copy)}>
+      vote
     </button>
   )
 }
@@ -25,12 +36,14 @@ const App = () => {
   ]
    
   const [selected, setSelected] = useState(0)
+  const [points, setPoints] = useState(new Uint16Array(anecdotes.length))
 
-  console.log(selected)
   return (
     <div>
       <p>{anecdotes[selected]}</p>
-      <Button setSelected={setSelected} max={anecdotes.length}/>
+      <p>has {points[selected]} votes</p>
+      <NextButton setSelected={setSelected} max={anecdotes.length}/>
+      <VoteButton selected={selected} points={points} setPoints={setPoints}/>
     </div>
   )
 }
