@@ -8,16 +8,34 @@ const FeedbackButton = ({amt, setAmt, name}) => (
   </button>
 )
 
-const Statistics = ({good, neutral, bad}) => (
-  <>
-    <Title title="statistics" />
-    <ul>
-      <li>good {good}</li>
-      <li>neutral {neutral}</li>
-      <li>bad {bad}</li>
-    </ul>
-  </>
-)
+const Statistics = ({good, neutral, bad}) => {
+  const calculateAverage = () => {
+    const score = good - bad
+    const total = good + neutral + bad
+
+    if (total == 0) return 0
+    return score / total
+  }
+
+  const calculatePositive = () => {
+    const total = good + neutral + bad
+    if (total == 0) return 0
+    return (good / total) * 100
+  }
+
+  return (
+    <>
+      <Title title="statistics" />
+      <ul>
+        <li>good {good}</li>
+        <li>neutral {neutral}</li>
+        <li>bad {bad}</li>
+        <li>average {calculateAverage()}</li>
+        <li>positive {calculatePositive()} %</li>
+      </ul>
+    </>
+  )
+}
 
 const App = () => {
   // save clicks of each button to its own state
