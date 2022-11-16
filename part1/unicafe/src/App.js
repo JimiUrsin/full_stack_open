@@ -9,6 +9,11 @@ const FeedbackButton = ({amt, setAmt, name}) => (
 )
 
 const Statistics = ({good, neutral, bad}) => {
+  if (good + neutral + bad == 0) {
+    return <p>No feedback given</p>
+  }
+
+
   const calculateAverage = () => {
     const score = good - bad
     const total = good + neutral + bad
@@ -25,7 +30,6 @@ const Statistics = ({good, neutral, bad}) => {
 
   return (
     <>
-      <Title title="statistics" />
       <ul>
         <li>good {good}</li>
         <li>neutral {neutral}</li>
@@ -49,6 +53,7 @@ const App = () => {
       <FeedbackButton amt={good} setAmt={setGood} name="good" />
       <FeedbackButton amt={neutral} setAmt={setNeutral} name="neutral" />
       <FeedbackButton amt={bad} setAmt={setBad} name="bad" />
+      <Title title="statistics" />
       <Statistics good={good} neutral={neutral} bad={bad} />
     </div>
   )
