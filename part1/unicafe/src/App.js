@@ -2,10 +2,17 @@ import { useState } from 'react'
 
 const Title = ({title}) => <h1>{title}</h1>
 
-const FeedbackButton = ({amt, setAmt, name}) => (
+const Button = ({amt, setAmt, name}) => (
   <button onClick={() => setAmt(amt + 1)}>
     {name}
   </button>
+)
+
+const StatisticLine = ({text, value}) => (
+  <tr>
+    <td>{text}</td>
+    <td>{value}</td>
+  </tr>
 )
 
 const Statistics = ({good, neutral, bad}) => {
@@ -29,15 +36,15 @@ const Statistics = ({good, neutral, bad}) => {
   }
 
   return (
-    <>
-      <ul>
-        <li>good {good}</li>
-        <li>neutral {neutral}</li>
-        <li>bad {bad}</li>
-        <li>average {calculateAverage()}</li>
-        <li>positive {calculatePositive()} %</li>
-      </ul>
-    </>
+    <table>
+      <tbody>
+        <StatisticLine text="good" value={good}/>
+        <StatisticLine text="neutral" value={neutral}/>
+        <StatisticLine text="bad" value={bad}/>
+        <StatisticLine text="average" value={calculateAverage()}/>
+        <StatisticLine text="positive" value={calculatePositive() + " %"}/>
+      </tbody>
+    </table>
   )
 }
 
@@ -50,9 +57,9 @@ const App = () => {
   return (
     <div>
       <Title title="give feedback" />
-      <FeedbackButton amt={good} setAmt={setGood} name="good" />
-      <FeedbackButton amt={neutral} setAmt={setNeutral} name="neutral" />
-      <FeedbackButton amt={bad} setAmt={setBad} name="bad" />
+      <Button amt={good} setAmt={setGood} name="good" />
+      <Button amt={neutral} setAmt={setNeutral} name="neutral" />
+      <Button amt={bad} setAmt={setBad} name="bad" />
       <Title title="statistics" />
       <Statistics good={good} neutral={neutral} bad={bad} />
     </div>
