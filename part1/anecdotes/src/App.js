@@ -46,7 +46,7 @@ const App = () => {
     const max = Math.max(...points)
     return points.indexOf(max)
   }
-   
+
   const [selected, setSelected] = useState(0)
   const [points, setPoints] = useState(new Uint16Array(anecdotes.length))
 
