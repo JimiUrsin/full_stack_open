@@ -8,6 +8,11 @@ const App = () => {
 
   const addName = (event) => {
     event.preventDefault()
+    if (persons.find((person) => person.name === newName) !== undefined) {
+      alert(`${newName} is already added to phonebook`)
+      return
+    }
+
     const newPerson = [{
       name: newName
     }]
