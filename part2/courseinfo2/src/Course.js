@@ -20,6 +20,6 @@ const Course = ({course}) => {
         <Total sum={total} />
       </div>
     )
-  }
+}
 
 export default Course
