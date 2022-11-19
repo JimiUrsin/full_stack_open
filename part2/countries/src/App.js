@@ -44,7 +44,7 @@ function Weather({city, countryCode}) {
         console.log(response.data)
         setWeather(response.data)
       })
-  }, [])
+  })
 
   if ('main' in weather) {
     return (
