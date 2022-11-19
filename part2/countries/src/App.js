@@ -33,7 +33,7 @@ function Country({country}) {
   )
 }
 
-function Countries ({filterCountries}) {
+function Countries ({setFilter, filterCountries}) {
   const filtered = filterCountries()
 
   if (filtered.length > 10) {
@@ -41,8 +41,13 @@ function Countries ({filterCountries}) {
   }
 
   if (filtered.length > 1) {
-    return filtered.map(country =>
-      <p key={country.cca3}>{country.name.common}</p>
+    return filtered.map(country => 
+      <div key={country.cca3}>
+        {country.name.common}
+        <button key={country.cca3} onClick={() => setFilter(country.name.common)}>
+          show
+        </button>
+      </div>
     )
   }
 
@@ -72,7 +77,7 @@ function App() {
   return (
     <>
       <CountryFilter filter={filter} setFilter={setFilter} />
-      <Countries filterCountries={filterCountries} />
+      <Countries setFilter={setFilter} filterCountries={filterCountries} />
     </>
   )
 }
