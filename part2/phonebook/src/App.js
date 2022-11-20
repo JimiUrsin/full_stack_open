@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
+import personService from './services/persons'
 
 const Filter = ({newFilter, setNewFilter}) => {
   const handleFilterChange = (event) => {setNewFilter(event.target.value)}
@@ -34,12 +34,12 @@ const App = () => {
   const handleNumberChange = (event) => {setNewNumber(event.target.value)}
 
   useEffect(() => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        setPersons(response.data)
-      })
-  })
+    personService
+      .getAll()
+      .then((personData) =>
+        setPersons(personData)
+      )
+  }, [])
 
   const addPerson = (event) => {
     event.preventDefault()
@@ -49,12 +49,16 @@ const App = () => {
       return
     }
 
-    const newPerson = [{
+    const newPerson = {
       name: newName,
       number: newNumber
-    }]
+    }
 
-    setPersons(persons.concat(newPerson))
+    personService
+      .create(newPerson)
+      .then(returnedPerson => {
+        setPersons(persons.concat(returnedPerson))
+      })
   }
 
   return (
@@ -70,9 +74,11 @@ const App = () => {
       />
       <h2>Numbers</h2>
       <ul>
-          {persons
-            .filter((person) => person.name.toUpperCase().includes(newFilter.toUpperCase()))
-            .map((person) => <li key={person.name}>{person.name} {person.number}</li>)
+          {persons === undefined
+            ? <></>
+            : persons
+              .filter((person) => person.name.toUpperCase().includes(newFilter.toUpperCase()))
+              .map((person) => <li key={person.name}>{person.name} {person.number}</li>)
           }
       </ul>
     </div>
