@@ -51,7 +51,8 @@ const App = () => {
   const [newFilter, setNewFilter] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [changed, setChanged] = useState(true)
-  const [notification, setNotification] = useState(null)
+  const [success, setSuccess] = useState(null)
+  const [error, setError] = useState(null)
 
   const handleNameChange = (event) => {setNewName(event.target.value)}
   const handleNumberChange = (event) => {setNewNumber(event.target.value)}
@@ -89,11 +90,11 @@ const App = () => {
         .create(newPerson)
         .then(returnedPerson => {
           setPersons(persons.concat(returnedPerson))
-          setNotification(
+          setSuccess(
             `Added ${newPerson.name}`
           )
           setTimeout(() => 
-            setNotification(null)
+            setSuccess(null)
           , 5000)
         })
     }
@@ -105,7 +106,13 @@ const App = () => {
     }
     personService
       .deletePerson(id)
-      .then(() => {
+      .catch(() => {
+        setError(`Information of ${name} has already been removed from server`)
+        setTimeout(() => 
+          setError(null)
+        , 5000)
+      })
+      .finally(() => {
         setChanged(!changed)
       })
   }
@@ -113,7 +120,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={notification} notifClass="success"/>
+      <Notification message={success} notifClass="success"/>
+      <Notification message={error} notifClass="error" />
       <Filter filter={newFilter} setNewFilter={setNewFilter}/>
       <h3>add a new</h3>
       <PersonForm 
