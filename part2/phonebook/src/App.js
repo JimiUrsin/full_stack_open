@@ -37,7 +37,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newFilter, setNewFilter] = useState('')
   const [newNumber, setNewNumber] = useState('')
-  const [deleted, setDeleted] = useState(true)
+  const [changed, setChanged] = useState(true)
 
   const handleNameChange = (event) => {setNewName(event.target.value)}
   const handleNumberChange = (event) => {setNewNumber(event.target.value)}
@@ -48,26 +48,35 @@ const App = () => {
       .then((personData) =>
         setPersons(personData)
       )
-  }, [deleted])
+  }, [changed])
 
   const addPerson = (event) => {
     event.preventDefault()
 
-    if (persons.find((person) => person.name === newName) !== undefined) {
-      alert(`${newName} is already added to phonebook`)
-      return
-    }
 
     const newPerson = {
       name: newName,
       number: newNumber
     }
 
-    personService
-      .create(newPerson)
-      .then(returnedPerson => {
-        setPersons(persons.concat(returnedPerson))
-      })
+    const foundPerson = persons.find((person) => person.name === newName)
+    if (foundPerson !== undefined) {
+      if (!window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
+        return
+      }
+      personService
+        .update(foundPerson.id, newPerson)
+        .then(() => 
+          setChanged(!changed)
+        )
+    }
+    else {
+      personService
+        .create(newPerson)
+        .then(returnedPerson => {
+          setPersons(persons.concat(returnedPerson))
+        })
+    }
   }
   
   const deletePerson = (id, name) => {
@@ -77,7 +86,7 @@ const App = () => {
     personService
       .deletePerson(id)
       .then(() => {
-        setDeleted(!deleted)
+        setChanged(!changed)
       })
   }
 
