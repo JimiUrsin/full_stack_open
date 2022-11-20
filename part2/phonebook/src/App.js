@@ -1,10 +1,23 @@
 import { useState, useEffect } from 'react'
 import personService from './services/persons'
+import './app.css'
 
 const Filter = ({newFilter, setNewFilter}) => {
   const handleFilterChange = (event) => {setNewFilter(event.target.value)}
   return (
     <p>filter shown with <input value={newFilter} onChange={handleFilterChange}/></p>
+  )
+}
+
+const Notification = ({ message, notifClass }) => {
+  if (message === null) {
+    return null
+  }
+
+  return (
+    <div className={notifClass}>
+      {message}
+    </div>
   )
 }
 
@@ -38,6 +51,7 @@ const App = () => {
   const [newFilter, setNewFilter] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [changed, setChanged] = useState(true)
+  const [notification, setNotification] = useState(null)
 
   const handleNameChange = (event) => {setNewName(event.target.value)}
   const handleNumberChange = (event) => {setNewNumber(event.target.value)}
@@ -75,6 +89,12 @@ const App = () => {
         .create(newPerson)
         .then(returnedPerson => {
           setPersons(persons.concat(returnedPerson))
+          setNotification(
+            `Added ${newPerson.name}`
+          )
+          setTimeout(() => 
+            setNotification(null)
+          , 5000)
         })
     }
   }
@@ -93,6 +113,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={notification} notifClass="success"/>
       <Filter filter={newFilter} setNewFilter={setNewFilter}/>
       <h3>add a new</h3>
       <PersonForm 
