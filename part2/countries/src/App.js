@@ -29,7 +29,7 @@ function Country({country}) {
         {listLanguages(country.languages)}
       </ul>
       <img src={country.flags.png} />
-      <Weather city={country.capital} />
+      <Weather city={country.capital} countryCode={country.cca3} />
     </div>
   )
 }
@@ -38,6 +38,9 @@ function Weather({city, countryCode}) {
   const [weather, setWeather] = useState({})
 
   useEffect(() => {
+    if ('main' in weather) {
+      return
+    }
     axios
       .get(`https://api.openweathermap.org/data/2.5/weather?q=${city},${countryCode}&units=metric&appid=${process.env.REACT_APP_OPENWEATHER_API_KEY}`)
       .then(response => {
