@@ -24,11 +24,20 @@ const PersonForm = (props) => {
   )
 }
 
+const Person = ({person, deletePerson}) => {
+  return (
+    <li key={person.name}>
+      {person.name} {person.number} <button onClick={() => deletePerson(person.id, person.name)}>delete</button>
+    </li>
+  )
+}
+
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newFilter, setNewFilter] = useState('')
   const [newNumber, setNewNumber] = useState('')
+  const [deleted, setDeleted] = useState(true)
 
   const handleNameChange = (event) => {setNewName(event.target.value)}
   const handleNumberChange = (event) => {setNewNumber(event.target.value)}
@@ -39,7 +48,7 @@ const App = () => {
       .then((personData) =>
         setPersons(personData)
       )
-  }, [])
+  }, [deleted])
 
   const addPerson = (event) => {
     event.preventDefault()
@@ -60,6 +69,17 @@ const App = () => {
         setPersons(persons.concat(returnedPerson))
       })
   }
+  
+  const deletePerson = (id, name) => {
+    if (!window.confirm(`Delete ${name}?`)) {
+      return
+    }
+    personService
+      .deletePerson(id)
+      .then(() => {
+        setDeleted(!deleted)
+      })
+  }
 
   return (
     <div>
@@ -78,7 +98,7 @@ const App = () => {
             ? <></>
             : persons
               .filter((person) => person.name.toUpperCase().includes(newFilter.toUpperCase()))
-              .map((person) => <li key={person.name}>{person.name} {person.number}</li>)
+              .map((person) => <Person key={person.id} person={person} deletePerson={deletePerson}/>)
           }
       </ul>
     </div>
